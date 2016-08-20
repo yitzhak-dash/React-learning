@@ -70,18 +70,32 @@ const App = (props) => {
     </div>)
 };
 
+// creates component
 const Sidebar = React.createClass({
+    // component lifecycle event
+    componentDidUpdate(){
+        var el = ReactDOM.findDOMNode(this.refs.add);
+        if (el) el.focus();
+    },
     render(){
         let props = this.props;
         return (<div className="sidebar">
+            <button onClick={e => this.props.showAddDeck()}>add deck
+            </button>
             <h2>All Decks</h2>
             <ul>
                 {props.decks.map((deck, i)=>
                     <li key={i}>{deck.name}</li>
                 )}
             </ul>
-            {props.addingDeck && <input ref="add"/>}
+            {props.addingDeck && <input ref="add" onKeyPress={this.createDeck}/>}
         </div>);
+    },
+    createDeck(evt){
+        if (evt.which !== 13) return;
+        var name = ReactDOM.findDOMNode(this.refs.add).value;
+        this.props.addDeck(name);
+        this.props.hideAddDeck();
     }
 });
 
@@ -89,7 +103,13 @@ function run() {
     let state = store.getState();
     console.log(state);
     ReactDOM.render(<App>
-        <Sidebar decks={state.decks} addingDeck={state.addingDeck}/>
+        <Sidebar
+            decks={state.decks}
+            addingDeck={state.addingDeck}
+            addDeck={name => store.dispatch(addDeck(name))}
+            showAddDeck={() => store.dispatch(showAddDeck())}
+            hideAddDeck={() => store.dispatch(hideAddDeck())}
+        />
     </App>, document.getElementById('root'));
 }
 
@@ -97,8 +117,3 @@ function run() {
 run();
 
 store.subscribe(run);
-
-// define function that we can call from the console
-window.show = () => store.dispatch(showAddDeck());
-window.hide = () => store.dispatch(hideAddDeck());
-window.add = () => store.dispatch(addDeck(new Date().toString()));
