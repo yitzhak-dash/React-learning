@@ -24,20 +24,10 @@ const cards = (state, action) => {
     }
 };
 
-const store = Redux.createStore(function (state, action) {
-    switch (action.type) {
-        case 'ADD_CARD':
-            let newCard = Object.assign({}, action.data, { // creates new object based on another one.
-                score: 1,
-                id: +new Date
-            });
-            return Object.assign({}, state, {
-                cards: state.cards ? state.cards.concat([newCard]) : [newCard]
-            });
-        default:
-            return state || {};
-    }
-});
+const store = Redux.createStore(Redux.combineReducers({
+    // instead ->   cards: cards
+    cards
+}));
 
 store.subscribe(()=> {
     console.log(store.getState());
