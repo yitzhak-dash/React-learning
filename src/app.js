@@ -7,6 +7,17 @@
  */
 
 /**
+ * ADD_DECK
+ * SHOW_ADD_DECK
+ * HIDE_ADD_DECK
+ */
+
+// action creator functions
+const addDeck = name => ({type: 'ADD_DECK', data: name});
+const showAddDeck = name => ({type: 'SHOW_ADD_DECK'});
+const hideAddDeck = name => ({type: 'HIDE_ADD_DECK'});
+
+/**
  * Break reducer for each top level property(like cards)
  * @param state: cards parameter
  * @param action
@@ -24,9 +35,32 @@ const cards = (state, action) => {
     }
 };
 
+const decks = (state, action)=> {
+    switch (action.type) {
+        case 'ADD_DECK':
+            let newDeck = {name: action.data, id: +new Date};
+            return state.concat([newDeck]);
+        default:
+            return state || [];
+    }
+};
+
+const addingDeck = (state, action)=> {
+    switch (action.type) {
+        case "SHOW_ADD_DECK" :
+            return true;
+        case "HIDE_ADD_DECK":
+            return false;
+        default:
+            return !!state; // (true -> true, false -> false, undefined -> false)
+    }
+};
+
 const store = Redux.createStore(Redux.combineReducers({
     // instead ->   cards: cards
-    cards
+    cards,
+    decks,
+    addingDeck
 }));
 
 // pure build component function
@@ -46,11 +80,25 @@ const Sidebar = React.createClass({
                     <li key={i}>{deck.name}</li>
                 )}
             </ul>
-            {props.addingDeck && <input ref="add" />}
+            {props.addingDeck && <input ref="add"/>}
         </div>);
     }
 });
 
-ReactDOM.render(<App>
-    <Sidebar decks={[{name:'deck 1'}]} addingDeck={true} />
-</App>, document.getElementById('root'));
+function run() {
+    let state = store.getState();
+    console.log(state);
+    ReactDOM.render(<App>
+        <Sidebar decks={state.decks} addingDeck={state.addingDeck}/>
+    </App>, document.getElementById('root'));
+}
+
+
+run();
+
+store.subscribe(run);
+
+// define function that we can call from the console
+window.show = () => store.dispatch(showAddDeck());
+window.hide = () => store.dispatch(hideAddDeck());
+window.add = () => store.dispatch(addDeck(new Date().toString()));
