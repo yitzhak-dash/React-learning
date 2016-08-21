@@ -3,6 +3,20 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {connect} from 'react-redux';
+import {addDeck, showAddDeck, hideAddDeck} from '../actions'
+
+
+const mapStateToProps = ({decks, addingDeck}) => ({
+    decks,
+    addingDeck
+});
+
+const mapDispatchToProps = (dispatch) =>({
+    addDeck: name => dispatch(addDeck(name)), // using action creator
+    showAddDeck: () => dispatch(showAddDeck()),
+    hideAddDeck: () => dispatch(hideAddDeck())
+});
 
 const Sidebar = React.createClass({
     // component lifecycle event
@@ -32,4 +46,4 @@ const Sidebar = React.createClass({
     }
 });
 
-export default  Sidebar;
+export default  connect(mapStateToProps, mapDispatchToProps)(Sidebar);
