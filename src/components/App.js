@@ -2,11 +2,14 @@
  * Created by Yitzh on 8/21/2016.
  */
 import React from 'react';
+import  Sidebar from './Sidebar';
+
 
 // pure build component function
-const App = (props) => {
+const App = ({children}) => {
     return (<div className="app">
-        {props.children}
+        <Sidebar />
+        {children}
     </div>)
 };
 
