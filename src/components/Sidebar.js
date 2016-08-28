@@ -39,7 +39,7 @@ const Sidebar = React.createClass({
         </div>);
     },
     createDeck(evt){
-        if (evt.which !== 13) return;
+        if (evt.which !== 13) return;// wait for ENTER
         var name = ReactDOM.findDOMNode(this.refs.add).value;
         this.props.addDeck(name);
         this.props.hideAddDeck();
