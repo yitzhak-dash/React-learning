@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import  Sidebar from './Sidebar';
+import Toolbar from './Toolbar';
 import {connect} from 'react-redux';
 
 // the <deckId> param is taken from the router(see app.js)
@@ -13,9 +14,9 @@ const mapStateToProps = (props, {params:{deckId}}) => ({
 // pure build component function
 const App = ({deckId, children}) => {
     return (<div className="app">
+        <Toolbar deckId={deckId}/>
         <Sidebar />
         {children}
-        <h3>deckId: {deckId}</h3>
     </div>)
 };
 

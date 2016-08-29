@@ -28,8 +28,6 @@ const Sidebar = React.createClass({
     render(){
         let props = this.props;
         return (<div className="sidebar">
-            <button onClick={e => this.props.showAddDeck()}>add deck
-            </button>
             <h2>All Decks</h2>
             <ul>
                 {props.decks.map((deck, i)=>
